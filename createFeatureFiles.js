@@ -13,8 +13,8 @@ const createFeatureFiles = (buffer) => {
             .on('data', (row) => {
                 console.log('Processing row:', row); // Log the current row for debugging
 
-                const filenameValue = row.File_Name; // Use File_Name from your CSV
-                const gherkinContent = row['Gherkin definition']; // Use Gherkin definition from your CSV
+                const filenameValue = row.File_Name; // Ensure this matches your CSV header
+                const gherkinContent = row['Description']; // Ensure this matches your CSV header
 
                 if (!filenameValue || !gherkinContent) {
                     console.log(`Skipping row due to missing filename or Gherkin content.`);

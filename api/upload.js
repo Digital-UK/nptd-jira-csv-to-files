@@ -1,5 +1,5 @@
 import multer from 'multer';
-import createFeatureFiles from '../createFeatureFiles.js';
+import createFeatureFiles from '../createFeatureFiles.js'; // Ensure this path is correct
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: 'No file uploaded.' });
         }
 
-        const csvData = req.file.buffer;
+        const csvData = req.file.buffer; // Get the uploaded file buffer
 
         try {
             const features = await createFeatureFiles(csvData); // Process the CSV buffer

@@ -10,11 +10,11 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    fetch('/api/upload', { // Ensure this points to the correct API route
+    fetch('/api/upload', { // Ensure this matches your route in upload.js
         method: 'POST',
         body: formData,
     })
-    .then(response => {
+        .then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
     })
