@@ -1,33 +1,29 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const createFeatureFiles = require('./createFeatureFiles'); // Import the modified function
 
 const app = express();
 const PORT = 3000;
 
 // Set up storage for uploaded files
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './'); // Store in the root directory
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
-    },
-});
+const storage = multer.memoryStorage(); // Use memory storage for Vercel compatibility
+const upload = multer({ storage: storage });
 
-const upload = multer({ storage });
-
-// Serve static files (HTML, CSS, JS)
 app.use(express.static(__dirname));
 
 // Endpoint to handle file upload
 app.post('/upload', upload.single('file'), async (req, res) => {
-    const csvFilePath = path.resolve(__dirname, req.file.originalname);
+    console.log('Uploaded file:', req.file); // Log the uploaded file details
+
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded.' });
+    }
+
+    const csvFilePath = req.file.originalname; // Using the original file name for processing
 
     try {
-        const features = await createFeatureFiles(csvFilePath); // Generate features
+        const features = await createFeatureFiles(req.file.buffer); // Use the buffer directly for processing
         const downloadLinks = features.map(feature => ({
             name: feature.filename,
             content: feature.content,

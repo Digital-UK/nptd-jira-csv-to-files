@@ -10,7 +10,7 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    fetch('/api/upload', { // Change this line to point to the new API endpoint
+    fetch('/upload', { // Change this line to point to the new API endpoint
         method: 'POST',
         body: formData,
     })
