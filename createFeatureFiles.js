@@ -11,10 +11,10 @@ const createFeatureFiles = (buffer) => {
         stream
             .pipe(csv())
             .on('data', (row) => {
-                console.log('Processing row:', row); // Log the current row for debugging
+                console.log('Processing row:', row); // Debugging log
 
                 const filenameValue = row.File_Name; // Ensure this matches your CSV header
-                const gherkinContent = row['Description']; // Ensure this matches your CSV header
+                const gherkinContent = row['Gherkin definition']; // Ensure this matches your CSV header
 
                 if (!filenameValue || !gherkinContent) {
                     console.log(`Skipping row due to missing filename or Gherkin content.`);

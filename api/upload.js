@@ -1,5 +1,5 @@
 import multer from 'multer';
-import createFeatureFiles from '../createFeatureFiles.js'; // Ensure this path is correct
+import createFeatureFiles from '../createFeatureFiles.js';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -8,7 +8,6 @@ const upload = multer({ storage: storage });
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         if (!req.file) {
-            console.log('No file uploaded'); // Log for debugging
             return res.status(400).json({ message: 'No file uploaded.' });
         }
 
