@@ -11,3 +11,4 @@ logs
 # Optional: Ignore temporary files
 tmp
 temp
+.igitignore
