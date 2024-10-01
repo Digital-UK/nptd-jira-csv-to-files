@@ -22,7 +22,10 @@ h1 {
 
 #message {
     margin-top: 20px;
-    margin-bottom: 30px;
     text-align: center;
     color: green;
+}
+
+#message div {
+    margin-top: 20px;
 }

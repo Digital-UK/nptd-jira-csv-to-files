@@ -22,7 +22,7 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
         // Create download links
         if (data.files && data.files.length > 0) {
             const downloadLinks = data.files.map(file => {
-                return `<a href="${file.url}" download>${file.name}</a>`;
+                return `<a href="/download/${file.name}?content=${encodeURIComponent(file.content)}" download>${file.name}</a>`;
             }).join('<br>');
 
             messageDiv.innerHTML += `<div>${downloadLinks}</div>`;

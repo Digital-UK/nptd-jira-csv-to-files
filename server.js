@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { exec } = require('child_process');
+const createFeatureFiles = require('./createFeatureFiles'); // Import the modified function
 
 const app = express();
 const PORT = 3000;
@@ -22,55 +22,31 @@ const upload = multer({ storage });
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(__dirname));
 
-// Function to recursively find feature files in directories
-const findFeatureFiles = (dir) => {
-    let results = [];
-    const list = fs.readdirSync(dir);
-    list.forEach(file => {
-        const filePath = path.join(dir, file);
-        const stat = fs.statSync(filePath);
-        if (stat && stat.isDirectory()) {
-            results = results.concat(findFeatureFiles(filePath)); // Recurse into subdirectory
-        } else if (file.endsWith('.feature')) {
-            results.push(filePath); // Add file path to results
-        }
-    });
-    return results;
-};
-
 // Endpoint to handle file upload
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
     const csvFilePath = path.resolve(__dirname, req.file.originalname);
 
-    // Execute the createFeatureFiles.js script
-    exec(`node createFeatureFiles.js`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error: ${stderr}`);
-            return res.status(500).json({ message: 'Error creating feature files.' });
-        }
-
-        console.log(stdout);
-
-        // List the generated feature files
-        const generatedFiles = findFeatureFiles(__dirname).map(file => ({
-            name: path.basename(file), // Get just the file name
-            url: `/download/${path.relative(__dirname, file)}` // URL based on the relative path
+    try {
+        const features = await createFeatureFiles(csvFilePath); // Generate features
+        const downloadLinks = features.map(feature => ({
+            name: feature.filename,
+            content: feature.content,
         }));
 
-        res.json({ message: 'Feature files created successfully!', files: generatedFiles });
-    });
+        res.json({ message: 'Feature files generated successfully!', files: downloadLinks });
+    } catch (error) {
+        console.error(`Error creating feature files: ${error}`);
+        res.status(500).json({ message: 'Error creating feature files.' });
+    }
 });
 
-// Endpoint to download feature files
-app.get('/download/*', (req, res) => {
-    const filePath = path.join(__dirname, req.params[0]); // Use the full path from the URL
-    console.log(`Attempting to download file from: ${filePath}`); // Log the file path
-    res.download(filePath, (err) => {
-        if (err) {
-            console.error('Error downloading file:', err);
-            res.status(404).send('File not found.');
-        }
-    });
+// Endpoint to download feature files as text
+app.get('/download/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const content = req.query.content; // Get content from query string
+    res.setHeader('Content-disposition', `attachment; filename=${filename}`);
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(content); // Send the content back as a download
 });
 
 // Start the server
