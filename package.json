@@ -1,0 +1,17 @@
+{
+  "name": "nptd-jira-csv-to-files",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bunx --bun vite",
+    "test": "bunx --bun vitest",
+    "build": "tsc && bunx --bun vite build",
+    "preview": "bunx --bun vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.2"
+  }
+}
