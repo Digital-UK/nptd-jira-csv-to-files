@@ -1,54 +1,50 @@
 import type { Parser } from 'csv-parse';
 import { parse } from 'csv-parse';
 
-export class CSVIngest {
+export class CSVIngest<T extends Record<any, any>> {
     constructor() {
         console.log('CSVIngest constructor');
 
+        this.#readablePromiseAndResolvers = Promise.withResolvers();
         this.#initParser();
     }
 
-    async ingest(filePath: string) {
+    async *ingest(filePath: string): AsyncGenerator<T> {
         console.log('Ingesting', filePath);
         const readStream = Bun.file(filePath).stream();
+
+
+        const { promise } = this.#readablePromiseAndResolvers;
 
         for await (const chunk of readStream) {
             // Do something with each 'chunk'
             this.#parser.write(chunk);
         }
+
+        await promise;
+
+        this.#parser.end();
+
+        let record;
+
+        while (record = this.#parser.read()) {
+            yield record;
+        }
     }
 
     #initParser() {
-        this.#parser = parse({});
+        this.#parser = parse({
+            columns: true,
+        });
 
-        this.#parser.on('error', function(err){
-            console.error(err.message);
-            process.exit(1);
+        this.#parser.on('error', (err) => {
+            this.#readablePromiseAndResolvers.reject(err); 
         });
         this.#parser.on('readable', () => {
-            let record = this.#parser.read();
-            let processor = this.#dataProcessor
-
-            if (!processor) {
-                console.warn('No data processor set');
-
-                processor = (record) => {
-                    console.log(record);
-                };
-            }
-
-            while (record = this.#parser.read()) {
-                processor(record);
-            }
+            this.#readablePromiseAndResolvers.resolve(); 
         });
     }
-
-    get #dataProcessor() {
-        return this.#dataProcessorExternal;
-    }
     
-    #dataProcessorExternal: ((date: any) => void) | undefined;
+    #readablePromiseAndResolvers: ReturnType<typeof Promise.withResolvers>;
     #parser: Parser = parse({});
-    
-
 }
