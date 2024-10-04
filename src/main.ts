@@ -1,15 +1,14 @@
 import { CSVIngest } from './ingest';
+import { DataDigest } from './digest';
 
 console.log('Hello World!');
 console.log(process.argv);
 
 const csvIngest = new CSVIngest();
+const dataDigest = new DataDigest();
 
 const filePath = process.argv[2];
 const targetFilePath = process.argv[3];
 
 const records = csvIngest.ingest(filePath);
-
-for await (const row of records) {
-    console.log(`row`, row);
-}
+const digestedRecords = dataDigest.digest(records);
