@@ -8,4 +8,8 @@ const csvIngest = new CSVIngest();
 const filePath = process.argv[2];
 const targetFilePath = process.argv[3];
 
-csvIngest.ingest(filePath);
+const records = csvIngest.ingest(filePath);
+
+for await (const row of records) {
+    console.log(`row`, row);
+}
