@@ -3,15 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "main.ts",
   "scripts": {
-    "dev": "bunx --bun vite",
+    "dev": "bun run src/main.ts",
     "test": "bunx --bun vitest",
-    "build": "tsc && bunx --bun vite build",
-    "preview": "bunx --bun vite preview"
+    "build:dev:linux": "bun build --compile --target=bun-linux-x64 ./src/main.ts --outfile bin/nptd-features",
+    "build:dev:win": "bun build --compile --target=bun-windows-x64 ./src/main.ts --outfile bin/nptd-features",
+    "build:dev": "bun run build:dev:linux && bun run build:dev:win",
   },
   "devDependencies": {
+    "@types/bun": "^1.1.10",
     "typescript": "^5.5.3",
     "vite": "^5.4.8",
     "vitest": "^2.1.2"
+  },
+  "engines": {
+    "bun": "^1.1.29"
   }
 }
