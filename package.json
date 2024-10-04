@@ -9,7 +9,7 @@
     "test": "bunx --bun vitest",
     "build:dev:linux": "bun build --compile --target=bun-linux-x64 ./src/main.ts --outfile bin/nptd-features",
     "build:dev:win": "bun build --compile --target=bun-windows-x64 ./src/main.ts --outfile bin/nptd-features",
-    "build:dev": "bun run build:dev:linux && bun run build:dev:win",
+    "build:dev": "bun run build:dev:linux && bun run build:dev:win"
   },
   "devDependencies": {
     "@types/bun": "^1.1.10",
@@ -19,5 +19,8 @@
   },
   "engines": {
     "bun": "^1.1.29"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6"
   }
 }
