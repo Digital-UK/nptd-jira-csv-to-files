@@ -1,3 +1,4 @@
+import { unlink } from "node:fs/promises";
 import archiver from 'archiver';
 
 export async function emit(filePath: string, fileData: AsyncGenerator<TransformedData | undefined>): Promise<void> {
@@ -31,15 +32,23 @@ export async function emit(filePath: string, fileData: AsyncGenerator<Transforme
         writer.end();
     });
 
-    for await (const file of fileData) {
-        if (!file) {
-            continue;
+    try {
+        for await (const file of fileData) {
+            if (!file) {
+                continue;
+            }
+
+            const [filePath, fileData] = file;
+        
+            console.log(`Adding: `, filePath);
+
+            archive.append(fileData, { name: filePath });
         }
-
-        const [filePath, fileData] = file;
-        console.log(`Adding: `, filePath);
-
-        archive.append(fileData, { name: filePath });
+    } 
+    catch (error) {
+        await unlink(filePath);
+        
+        throw error;
     }
 
     archive.finalize();

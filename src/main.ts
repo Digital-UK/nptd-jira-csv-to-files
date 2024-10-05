@@ -1,15 +1,25 @@
+import { handleHelp } from './help';
+import { sanitize } from './sanitize';
 import { ingest } from './ingest';
 import { digest } from './digest';
 import { transform } from './transform';
 import { emit } from './emit';
-import { handleHelp } from './help';
 
-const filePath = process.argv[2];
-const targetFilePath = process.argv[3];
+const scriptArgs = process.argv.slice(2);
 
-await handleHelp(filePath, targetFilePath);
+await handleHelp(scriptArgs);
 
-const records = ingest<RowData>(filePath);
-const digestedRecords = digest(records, transform);
+const [filePath, targetFilePath] = scriptArgs;
 
-await emit(targetFilePath, digestedRecords);
+
+try {
+    const [fileToParse, emitPath] = await sanitize(filePath, targetFilePath);
+    const records = await ingest<RowData>(fileToParse);
+    const digestedRecords = digest(records, transform);
+    
+    await emit(emitPath, digestedRecords);
+} 
+catch (error) {
+    console.error((error as Error).message ?? error);
+    process.exit(1);
+}
