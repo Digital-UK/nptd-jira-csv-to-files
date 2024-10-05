@@ -1,3 +1,8 @@
+declare module '*.md' {
+    const content: string;
+    export default content;
+}
+
 type TransformedData = [filePath: string, fileData: string];
 type DataTransformer<T extends Record<any, any>> = (data: D | undefined) => Generator<TransformedData | undefined, undefined, D | undefined>;
 
