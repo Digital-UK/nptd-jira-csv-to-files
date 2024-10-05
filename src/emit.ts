@@ -20,7 +20,28 @@ export async function emit(filePath: string, fileData: AsyncGenerator<Transforme
         throw err;
     });
 
+    const file = Bun.file(filePath);
+    const writer = file.writer();
+
+    archive.on('data', (chunk: Buffer) => {
+        writer.write(chunk);
+    });
+
+    archive.on('end', () => {
+        writer.end();
+    });
+
     for await (const file of fileData) {
-        console.log(file);
+        if (!file) {
+            continue;
+        }
+
+        const [filePath, fileData] = file;
+        console.log(`Adding: `, filePath);
+
+        archive.append(fileData, { name: filePath });
     }
+
+    archive.finalize();
+
 }
