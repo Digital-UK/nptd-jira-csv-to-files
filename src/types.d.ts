@@ -10,5 +10,5 @@ type RowData = {
     ['File_Name']: string;
     ['Summary']: string;
     ['Labels']: string;
-    ['Gherkin definition']: string;
+    ['Description']: string;
 };

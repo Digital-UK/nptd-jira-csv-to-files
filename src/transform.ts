@@ -1,15 +1,5 @@
 
-export function *transform(data: RowData): Generator<[filePath: string, fileData: string] | undefined> {
-    console.log('Transforming data');
-    //return transformer.transform(data);
-/*     const { ['Issue Type']: issueType } = data;
-    const isSubTask = issueType === 'Sub-task';
-    let parentPath = '';
-    
-    if (issueType === 'Story') {
-        parentPath = data['Summary'];
-    }
- */
+export function *transform(data: RowData | unknown): Generator<[filePath: string, fileData: string] | undefined> {
     let parentPath = '';
 
     while (true) {
@@ -24,8 +14,8 @@ export function *transform(data: RowData): Generator<[filePath: string, fileData
             const { 
                 ['Labels']: labels,
                 ['File_Name']: fileName, 
-                ['Gherkin definition']: gherkinDefinition 
-            } = data;
+                ['Description']: gherkinDefinition 
+            } = data as RowData;
             const issueMarkerIndex = gherkinDefinition.indexOf('@NPTD');
             data = yield [`${parentPath}/${labels}/${fileName}`, gherkinDefinition.slice(issueMarkerIndex)];
             //data = yield;
@@ -33,9 +23,5 @@ export function *transform(data: RowData): Generator<[filePath: string, fileData
         else {
             data = yield;
         }
-        /* else { 
-            data = yield;
-        } */
-       //data = yield;
     }
 }
