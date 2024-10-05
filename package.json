@@ -21,6 +21,7 @@
     "bun": "^1.1.29"
   },
   "dependencies": {
+    "archiver": "^7.0.1",
     "csv-parse": "^5.5.6"
   }
 }
