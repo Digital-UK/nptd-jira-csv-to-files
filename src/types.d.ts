@@ -9,6 +9,7 @@ type RowData = {
     ['Issue Type']: IssueTypes;
     ['File_Name']: string;
     ['Summary']: string;
+    ['Fix Version']: string;
     ['Labels']: string;
     ['Description']: string;
 };
