@@ -1,4 +1,4 @@
-export async function *digest<T extends Record<any, any>>(data: AsyncGenerator<T>, transformer: DataTransformer<T>) {
+export async function *digest<T extends Record<any, any>>(data: AsyncGenerator<T>, transformer: DataTransformer<T>): AsyncGenerator<ReturnType<DataTransformer<T>>> {
     let transformerGenFun; 
 
     for await (const row of data) {
