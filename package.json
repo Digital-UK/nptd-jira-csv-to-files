@@ -12,6 +12,7 @@
     "build:dev": "bun run build:dev:linux && bun run build:dev:win"
   },
   "devDependencies": {
+    "@types/archiver": "^6.0.2",
     "@types/bun": "^1.1.10",
     "typescript": "^5.5.3",
     "vite": "^5.4.8",
