@@ -1,4 +1,4 @@
-export class DataDigest<T extends Record<any, any>> {
+/* export class DataDigest<T extends Record<any, any>> {
     constructor() {
         console.log('DataDigest constructor');
     }
@@ -9,11 +9,21 @@ export class DataDigest<T extends Record<any, any>> {
             yield row;
         }
     }
-}
+} */
 
-export async function *digest<T extends Record<any, any>>(data: AsyncGenerator<T>) {
+export async function *digest<T extends Record<any, any>>(data: AsyncGenerator<T>, transformer: DataTransformer<T>) {
     console.log('Digesting data');
+    let transformerGenFun; // = transformer();
     for await (const row of data) {
-        yield row;
+        if (!transformerGenFun) {
+            transformerGenFun = transformer(row);
+            yield transformerGenFun.next();
+        } else {
+        //const { 'Summary':  } = row;
+        //const path = row['path'];
+        yield transformerGenFun.next(row);
+        //console.log(row);
+        //yield row;
+        }
     }
 }
