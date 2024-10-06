@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 bin
+dist
 *.local
 test-data
 test-output

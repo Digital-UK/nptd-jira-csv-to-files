@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import { handleHelp } from './help';
 import { sanitize } from './sanitize';
 import { ingest } from './ingest';
