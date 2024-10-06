@@ -3,10 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "main.ts",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "bun run src/main.ts",
     "test": "bunx --bun vitest",
+    "convert": "bun dist/main.js",
     "build:js": "bun build ./src/main.ts --outdir dist",
     "build:dev:linux": "bun build --compile --target=bun-linux-x64 ./src/main.ts --outfile bin/nptd-features",
     "build:dev:win": "bun build --compile --target=bun-windows-x64 ./src/main.ts --outfile bin/nptd-features",
