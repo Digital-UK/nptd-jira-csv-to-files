@@ -11,7 +11,6 @@ await handleHelp(scriptArgs);
 
 const [filePath, targetFilePath] = scriptArgs;
 
-
 try {
     const [fileToParse, emitPath] = await sanitize(filePath, targetFilePath);
     const records = await ingest<RowData>(fileToParse);
