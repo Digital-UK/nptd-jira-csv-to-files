@@ -1,4 +1,5 @@
-import { unlink } from "node:fs/promises";
+import { parse } from "node:path";
+import { unlink, mkdir } from "node:fs/promises";
 import archiver from 'archiver';
 
 export async function emit(filePath: string, fileData: AsyncGenerator<TransformedData | undefined>): Promise<void> {
@@ -21,6 +22,10 @@ export async function emit(filePath: string, fileData: AsyncGenerator<Transforme
         throw err;
     });
 
+    const { dir } = parse(filePath);
+
+    await mkdir(dir, { recursive: true });
+    
     const file = Bun.file(filePath);
     const writer = file.writer();
 
