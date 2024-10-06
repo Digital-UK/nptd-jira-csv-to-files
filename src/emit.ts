@@ -37,6 +37,8 @@ export async function emit(filePath: string, fileData: AsyncGenerator<Transforme
         writer.end();
     });
 
+    console.log(`Creating: "${filePath}"`);
+
     try {
         for await (const file of fileData) {
             if (!file) {
@@ -45,7 +47,7 @@ export async function emit(filePath: string, fileData: AsyncGenerator<Transforme
 
             const [filePath, fileData] = file;
         
-            console.log(`Adding: `, filePath);
+            console.log(`Adding: "${filePath}"`);
 
             archive.append(fileData, { name: filePath });
         }
@@ -58,4 +60,5 @@ export async function emit(filePath: string, fileData: AsyncGenerator<Transforme
 
     archive.finalize();
 
+    console.log(`Completed: "${filePath}"`);
 }
