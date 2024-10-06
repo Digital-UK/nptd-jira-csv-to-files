@@ -13,12 +13,6 @@ export async function *ingest<T>(file: BunFile): AsyncGenerator<T> {
     parser.on('error', (err) => {
         reject(err); 
     });
-    parser.on('finish', () => {
-        reject(`err`); 
-    });
-    parser.on('close', () => {
-        reject(`err`); 
-    });
     parser.on('readable', () => {
         resolve(); 
     });    
@@ -27,9 +21,9 @@ export async function *ingest<T>(file: BunFile): AsyncGenerator<T> {
         parser.write(chunk);
     }
 
-    await promise;
-
     parser.end();
+
+    await promise;
 
     let record;
 
