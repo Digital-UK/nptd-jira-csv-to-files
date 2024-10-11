@@ -10,10 +10,10 @@ function derivePathFromData(data: RowData, pathPrefix: string = '', pathSuffix: 
     return `${pathPrefix}${fixVersion}/${firstLabel}/${fileName}${pathSuffix}`;
 }
 
-const descriptionTrimRegEx = /^[\W\w\d\s]*@NPTD-\d*\n/m
+const descriptionTrimRegEx = /^[\W\w\d\s]*(@NPTD-\d*\n)/m
 
 function extractDefintion(rawDefintion: string): string {
-    return rawDefintion.replace(descriptionTrimRegEx, '');
+    return rawDefintion.replace(descriptionTrimRegEx, '$1');
 }
 
 export function *transform(data: RowData | unknown): Generator<[filePath: string, fileData: string] | undefined> {
