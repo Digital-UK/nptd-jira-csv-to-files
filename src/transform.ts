@@ -21,21 +21,26 @@ export function *transform(data: RowData | unknown): Generator<[filePath: string
 
     while (true) {
         const { ['Issue Type']: issueType } = data as RowData;
-        const isSubTask = issueType === 'Sub-task';
+        let entryData: [filePath: string, fileData: string] | undefined;
         
-        if (issueType === 'Story') {
-            parentPath = `${(data as RowData)['Summary']}/`;
-        }
+        if (/^story$/i.test(issueType)) {
+            parentPath = (data as RowData)['Summary'];
 
-        if (isSubTask)  {
+            if (!parentPath) {
+                console.warn(`File path could not be derived from story; no 'Summary' found.`);
+            } 
+        }
+        else if (/^sub-task$/i.test(issueType))  {
             const { 
                 ['Description']: description, 
             } = data as RowData;
 
-            data = yield [derivePathFromData(data as RowData, parentPath, FILE_EXTENSION), extractDefintion(description)];
-        } 
-        else {
-            data = yield;
+            entryData = [derivePathFromData(data as RowData, parentPath, FILE_EXTENSION), extractDefintion(description)];
         }
+        else {
+            console.warn(`Unknown 'Issue Type': ${issueType}`);
+        }
+
+        data = yield entryData;
     }
 }
